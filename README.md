@@ -41,6 +41,8 @@ Before running `SMEeBayAnalyzer`, you must:
    # Has_Revenue = 1 if revenue > 0, else 0
    df["Has_Revenue"] = (df["Total_Revenue_with_Ads"] > 0).astype(int)
 
+Convert columns like Ad_Spend_excl_VAT, Total_Ad_Clicks, Total_Revenue_with_Ads, CTR, CPC, ROAS to floats
+
 Quick Start
 Clone the repository:
 
