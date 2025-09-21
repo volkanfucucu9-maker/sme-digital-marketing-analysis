@@ -83,4 +83,9 @@ class SMEeBayAnalyzer:
 if __name__ == "__main__":
     # Example run with sample data
     df = pd.read_csv("data/sample_campaigns.csv")
-    an = SMEeBayAnal
+    an = SMEeBayAnalyzer(df)
+    an.linear_regression()
+    an.elasticity()
+    an.logistic_regression()
+    an.diminishing_returns()
+    an.insights()
