@@ -19,3 +19,11 @@ I evaluate:
 - Log‑Log Elasticity
 - Logistic Regression
 - linear regression (polynomial regression)
+
+Citation
+Fuçucu, V. (2025). Economic Impact of Digital Marketing on eBay Campaign Performance for German SMEs (2023–2025) [Code and data]. GISMA University of Applied Sciences. https://github.com/volkanfucucu9-maker/sme-digital-marketing-analysis
+
+Contact
+Volkan Fuçucu
+volkanfucucu9@gmail.com
+GitHub: @volkanfucucu9-maker
