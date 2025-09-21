@@ -1,12 +1,20 @@
-# src/analysis.py
-
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error, roc_auc_score
 
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Variance Inflation Factor (VIF) – check multicollinearity
+# Make sure df_clean is defined before running this.
+X = sm.add_constant(df_clean[['Ad_Spend_excl_VAT', 'Total_Ad_Clicks', 'CTR', 'CPC']])
+vif = pd.DataFrame()
+vif["Variable"] = X.columns
+vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+print("\nVariance Inflation Factors:\n", vif)
 
 class SMEeBayAnalyzer:
     def __init__(self, data: pd.DataFrame):
@@ -15,12 +23,16 @@ class SMEeBayAnalyzer:
         self.prepare_data()
 
     def prepare_data(self):
+        # Filter campaigns with spend and clicks
         d = self.data[
             (self.data['Ad_Spend_excl_VAT'] > 0) &
             (self.data['Total_Ad_Clicks'] > 0)
         ].copy()
+
+        # Log transforms
         d['log_ad_spend'] = np.log(d['Ad_Spend_excl_VAT'])
         d['log_revenue'] = np.log(d['Total_Revenue_with_Ads'] + 1)
+
         self.d = d
         print(f"Analysis data prepared: {len(d)} campaigns with ad spend")
 
@@ -65,8 +77,10 @@ class SMEeBayAnalyzer:
         quad = m.coef_[2]
         opt = -m.coef_[1] / (2 * quad) if quad < 0 else None
         print("\nMODEL 4: DIMINISHING RETURNS")
-        print(f"R²={r2:.3f}, RMSE={rmse:.2f}, Intercept={m.intercept_:.2f}, "
-              f"Linear={m.coef_[1]:.2f}, Q↓={quad:.6f}")
+        print(
+            f"R²={r2:.3f}, RMSE={rmse:.2f}, Intercept={m.intercept_:.2f}, "
+            f"Linear={m.coef_[1]:.2f}, Quad={quad:.6f}"
+        )
         if opt:
             print(f"Optimal spend ≈ {opt:.2f}€")
         self.results['poly'] = m
@@ -79,11 +93,10 @@ class SMEeBayAnalyzer:
         avg_cpc = self.data[self.data['CPC'] > 0]['CPC'].mean()
         print(f"ROI: {avg_roi:.2f}€/€ | Success Rate: {success_rate:.1f}% | Avg CPC: {avg_cpc:.2f}€")
 
-
 if __name__ == "__main__":
-    # Example run with sample data
-    df = pd.read_csv("data/sample_campaigns.csv")
-    an = SMEeBayAnalyzer(df)
+    # Load the cleaned data (must have Ad_Spend_excl_VAT > 0 entries)
+    df_clean = pd.read_csv("data/sample_campaigns.csv")
+    an = SMEeBayAnalyzer(df_clean)
     an.linear_regression()
     an.elasticity()
     an.logistic_regression()
