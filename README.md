@@ -19,6 +19,28 @@ I evaluate:
 - Logistic Regression
 - linear regression (polynomial regression)
 
+## Data Preparation Notes
+
+The raw eBay campaign CSV contains German column names.  
+Before running `SMEeBayAnalyzer`, you must:
+
+1. **Rename Columns**
+   - `Anzeigengebühren (ohne MwSt.)` → `Ad_Spend_excl_VAT`  
+   - `Anzeigen-Klicks insgesamt` → `Total_Ad_Clicks`  
+   - `Gesamtumsatz mit Anzeigen` → `Total_Revenue_with_Ads`  
+   - `Rentabilität der Anzeigenkosten (Umsatz/Anzeigengebühren (ohne MwSt.))` → `ROAS`
+
+2. **Create Derived Columns**
+   ```python
+   # CTR = Clicks / Impressions
+   df["CTR"] = df["Total_Ad_Clicks"] / df["Anzeigen-Impressions (über Platzierungen bei eBay)"]
+
+   # CPC = Spend / Clicks
+   df["CPC"] = df["Ad_Spend_excl_VAT"] / df["Total_Ad_Clicks"].replace(0, np.nan)
+
+   # Has_Revenue = 1 if revenue > 0, else 0
+   df["Has_Revenue"] = (df["Total_Revenue_with_Ads"] > 0).astype(int)
+
 Quick Start
 Clone the repository:
 
