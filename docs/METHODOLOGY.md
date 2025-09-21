@@ -21,7 +21,8 @@ This study uses quantitative regression analysis to assess SME digital marketing
 - pandas, numpy, statsmodels, scikit-learn versions as in requirements.txt
 
 Citation
-Fuçucu, V. (2025). Economic Impact of Digital Marketing on eBay Campaign Performance for German SMEs (2023–2025) [Code and data]. GISMA University of Applied Sciences. https://github.com/volkanfucucu9-maker/sme-digital-marketing-analysis
+Fuçucu, V. (2025). The Effect of Digital Marketing on Online Sales Performance of SMEs: A Regression Analysis Using E-commerce Retail Data (2023–2025). GISMA University of Applied Sciences. https://github.com/volkanfucucu9-maker/sme-digital-marketing-analysis
+
 
 Contact
 Volkan Fuçucu
