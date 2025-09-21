@@ -1,4 +1,3 @@
-# sme-digital-marketing-analysis
 # SME Digital Media Marketing - Spending - Performance
 
 This repository has both code and data to my MSc Data Science dissertation (CSD) for Gisma University of Applied Sciences. 
