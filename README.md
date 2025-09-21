@@ -20,27 +20,6 @@ I evaluate:
 - Logistic Regression
 - linear regression (polynomial regression)
 
-Repository Structure
-text
-├── data/
-│   └── sample_campaigns.csv     Cleaned dataset of eBay campaign metrics
-├── docs/
-│   └── METHODOLOGY.md           Detailed research methodology & setup
-├── notebooks/
-│   ├── 01_data_parsing.ipynb    CSV parsing & German→English header translation
-│   ├── 02_visualization.ipynb   Exploratory plots and correlation matrix
-│   ├── 03_regression_analysis.ipynb  Interactive modeling via SMEeBayAnalyzer
-│   └── 04_vif_analysis.ipynb    Variance Inflation Factor diagnostics
-├── src/
-│   └── analysis.py              Core Python script implementing regression models
-├── .gitignore
-├── README.md                    Project overview 
-├── requirements.txt             Python dependencies
-├── setup.py                     Installation script
-├── LICENSE                      MIT License
-└── CHANGELOG.md                 Version history and updates
-
-
 Quick Start
 Clone the repository:
 
