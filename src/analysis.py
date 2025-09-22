@@ -241,16 +241,11 @@ class SMEeBayAnalyzer:
         
         print("\n✅ Analysis completed successfully!")
 
-
 if __name__ == "__main__":
     try:
-        # Point to the cleaned dataset inside data/
-        analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
+        analyzer = SMEeBayAnalyzer("data/Promotion_listing_AKF.csv")
         analyzer.run_full_analysis()
     except FileNotFoundError:
-        print("❌ Error: data/sample_campaigns.csv not found")
-        print("Make sure you have the cleaned dataset in the data/ folder")
+        print("❌ Error: data/Promotion_listing_AKF.csv bulunamadı.")
     except Exception as e:
-        print(f"❌ Error: {e}")
-        print("Check that your CSV file matches the expected format")
-
+        print(f"❌ Hata: {e}")
