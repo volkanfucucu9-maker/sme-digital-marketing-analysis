@@ -43,6 +43,18 @@ Before running `SMEeBayAnalyzer`, you must:
 
 Convert columns like Ad_Spend_excl_VAT, Total_Ad_Clicks, Total_Revenue_with_Ads, CTR, CPC, ROAS to floats
 
+## Data availability
+This project uses proprietary **eBay Ads** campaign exports at campaign/week level. Raw exports **are not redistributed** due to platform terms and commercial sensitivity.
+
+To ensure reproducibility, the repo includes:
+- `data/Promotion_Listing_AKF.csv` — A dataset with the same shema as the real exports
+- `data_dictionary.md` — definitions, units, construction notes
+- `notebooks/analysis.ipynb` — the exact notebook used for figures/tables
+- `src/analyze.py` — script form of the analysis
+
+The synthetic file reproduces all transformations, models (OLS, log–log, logistic, quadratic), and figures.
+
+
 Quick Start
 Clone the repository:
 
