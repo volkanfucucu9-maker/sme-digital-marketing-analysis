@@ -9,6 +9,14 @@ from sklearn.metrics import r2_score, mean_squared_error, roc_auc_score
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # Variance Inflation Factor (VIF) – check multicollinearity
+X = sm.add_constant(df_clean[['Ad_Spend_excl_VAT','Total_Ad_Clicks','CTR','CPC']])
+
+vif = pd.DataFrame()
+
+vif["Variable"] = X.columns
+vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+
+print(vif)
 # Make sure df_clean is defined before running this.
 X = sm.add_constant(df_clean[['Ad_Spend_excl_VAT', 'Total_Ad_Clicks', 'CTR', 'CPC']])
 vif = pd.DataFrame()
