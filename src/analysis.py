@@ -13,9 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 
 CANDIDATES = [
-    DATA_DIR / "Promotion_Listing_AKF.csv",  # gerçek export (varsa bunu kullan)
-    DATA_DIR / "sample_campaigns.csv",        # yedek küçük örnek
-    DATA_DIR / "sample_synthetic.csv",        # opsiyonel sentetik
+    DATA_DIR / "Promotion_Listing_AKF.csv",  
 ]
 
 def _find_data():
