@@ -9,13 +9,15 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 
 # ========== 1) DATA LOADER (ilk bu!) ==========
+
+df_clean = pd.read_csv("data/Promotion_Listing_AKF.csv")
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 
 CANDIDATES = [
     DATA_DIR / "Promotion_Listing_AKF.csv",  
 ]
-df_clean = pd.read_csv("data/Promotion_Listing_AKF.csv")
 
 def _find_data():
     for p in CANDIDATES:
