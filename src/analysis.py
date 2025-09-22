@@ -61,13 +61,12 @@ df_clean = _normalise_columns(df_raw)
 # ========== 2) (İSTEĞE BAĞLI) VIF — loader’dan SONRA ==========
 d = df_clean[(df_clean['Ad_Spend_excl_VAT'] > 0) & (df_clean['Total_Ad_Clicks'] > 0)].copy()
 X = d[['Ad_Spend_excl_VAT','Total_Ad_Clicks','CTR','CPC']].dropna()
-Xc = add_constant(X, has_constant='add')
+Xc = sm.add_constant(X, has_constant='add')
 vif = pd.DataFrame({
     "Variable": Xc.columns,
     "VIF": [variance_inflation_factor(Xc.values, i) for i in range(Xc.shape[1])]
 })
 print("\nVariance Inflation Factors:\n", vif[vif["Variable"] != "const"])
-
 # ========== 3) MODELLER ==========
 # ... (buradan sonra sınıfın/OLS/logit/quadratic fonksiyonların)
 class SMEeBayAnalyzer:
