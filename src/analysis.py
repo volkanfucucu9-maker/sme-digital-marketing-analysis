@@ -243,7 +243,7 @@ class SMEeBayAnalyzer:
 
 if __name__ == "__main__":
     try:
-        # Use the cleaned CSV inside data/
+        # Temizlenmiş dosyanın yolu
         analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
         analyzer.run_full_analysis()
     except FileNotFoundError:
@@ -252,4 +252,3 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Error: {e}")
         print("Check that your CSV file matches the expected format and that the path is correct.")
-Then commit and push. Running:
