@@ -7,79 +7,7 @@ from sklearn.metrics import r2_score, mean_squared_error, roc_auc_score
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 
-# --- SMART LOADER for Promotion_Listing_AKF.csv (put right after imports) ---
-from pathlib import Path
-import pandas as pd
-import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA_FILE = ROOT / "data" / "Promotion_Listing_AKF.csv"
-
-if not DATA_FILE.exists():
-    raise FileNotFoundError(f"Dataset not found: {DATA_FILE}")
-
-def try_read(path):
-    """Try several common eBay export formats; return first successful DataFrame."""
-    trials = [
-        dict(sep=";", decimal=",", thousands=".", encoding="utf-8-sig", engine="python"),
-        dict(sep=";", decimal=",", thousands=".", encoding="utf-8",     engine="python"),
-        dict(sep=",", decimal=".", thousands=",", encoding="utf-8-sig", engine="python"),
-        dict(sep=",", decimal=".", thousands=",", encoding="utf-8",     engine="python"),
-        dict(sep="\t", decimal=",", thousands=".", encoding="utf-8-sig", engine="python"),
-    ]
-    last_err = None
-    for opts in trials:
-        try:
-            df = pd.read_csv(path, **opts)
-            if df.shape[1] >= 6:  # at least some columns
-                return df
-        except Exception as e:
-            last_err = e
-            continue
-    raise last_err or RuntimeError("Could not parse CSV with common settings.")
-
-raw = try_read(DATA_FILE)
-
-# Map German/English headers to your analysis schema
-colmap = {
-    "Anzeigengebühren (ohne MwSt.)": "Ad_Spend_excl_VAT",
-    "Anzeigen-Klicks insgesamt": "Total_Ad_Clicks",
-    "Gesamtumsatz mit Anzeigen": "Total_Revenue_with_Ads",
-    "Anzeigen-Impressions (über Platzierungen bei eBay)": "Impressions",
-    "Rentabilität der Anzeigenkosten (Umsatz/Anzeigengebühren (ohne MwSt.))": "ROAS",
-    # English variants (if already exported in EN)
-    "Ad Spend excl VAT": "Ad_Spend_excl_VAT",
-    "Total Ad Clicks": "Total_Ad_Clicks",
-    "Total Revenue with Ads": "Total_Revenue_with_Ads",
-    "Impressions": "Impressions",
-    "ROAS": "ROAS",
-}
-raw = raw.rename(columns={k: v for k, v in colmap.items() if k in raw.columns})
-
-# Derive missing fields safely
-if "CTR" not in raw.columns and {"Total_Ad_Clicks","Impressions"}.issubset(raw.columns):
-    raw["CTR"] = (raw["Total_Ad_Clicks"] / raw["Impressions"]).replace([np.inf, np.nan], 0).clip(0,1)
-if "CPC" not in raw.columns and {"Ad_Spend_excl_VAT","Total_Ad_Clicks"}.issubset(raw.columns):
-    raw["CPC"] = (raw["Ad_Spend_excl_VAT"] / raw["Total_Ad_Clicks"]).replace([np.inf, np.nan], 0)
-if "ROAS" not in raw.columns and {"Total_Revenue_with_Ads","Ad_Spend_excl_VAT"}.issubset(raw.columns):
-    raw["ROAS"] = (raw["Total_Revenue_with_Ads"] / raw["Ad_Spend_excl_VAT"]).replace([np.inf, np.nan], 0)
-if "Has_Revenue" not in raw.columns and "Total_Revenue_with_Ads" in raw.columns:
-    raw["Has_Revenue"] = (raw["Total_Revenue_with_Ads"] > 0).astype(int)
-
-required = ["Ad_Spend_excl_VAT","Total_Revenue_with_Ads","Total_Ad_Clicks",
-            "Impressions","CTR","CPC","ROAS","Has_Revenue"]
-missing = [c for c in required if c not in raw.columns]
-if missing:
-    # Yardımcı: ilk satırları yazdır ki başlık doğru mu görelim
-    print("[DEBUG] Header preview:\n", raw.head(3).to_string())
-    raise ValueError(f"Required columns missing after normalisation: {missing}\nHave: {list(raw.columns)}")
-
-df_clean = raw.copy()
-print(f"[INFO] Loaded '{DATA_FILE.name}' with shape {df_clean.shape}")
-# --- END SMART LOADER ---
-
-
-# ========== 2) (İSTEĞE BAĞLI) VIF — loader’dan SONRA ==========
 d = df_clean[(df_clean['Ad_Spend_excl_VAT'] > 0) & (df_clean['Total_Ad_Clicks'] > 0)].copy()
 X = d[['Ad_Spend_excl_VAT','Total_Ad_Clicks','CTR','CPC']].dropna()
 Xc = sm.add_constant(X, has_constant='add')
@@ -88,8 +16,7 @@ vif = pd.DataFrame({
     "VIF": [variance_inflation_factor(Xc.values, i) for i in range(Xc.shape[1])]
 })
 print("\nVariance Inflation Factors:\n", vif[vif["Variable"] != "const"])
-# ========== 3) MODELLER ==========
-# ... (buradan sonra sınıfın/OLS/logit/quadratic fonksiyonların)
+
 class SMEeBayAnalyzer:
     def __init__(self, data: pd.DataFrame):
         self.data = data.copy()
