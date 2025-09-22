@@ -1,4 +1,3 @@
-cat > docs/METHODOLOGY.md << 'EOF'
 # Detailed Methodology
 
 ## Research Design
