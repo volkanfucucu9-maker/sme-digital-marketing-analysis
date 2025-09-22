@@ -15,6 +15,7 @@ DATA_DIR = ROOT / "data"
 CANDIDATES = [
     DATA_DIR / "Promotion_Listing_AKF.csv",  
 ]
+df_clean = pd.read_csv("data/Promotion_Listing_AKF.csv")
 
 def _find_data():
     for p in CANDIDATES:
