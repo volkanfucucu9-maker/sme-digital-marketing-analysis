@@ -243,9 +243,9 @@ class SMEeBayAnalyzer:
 
 
 if __name__ == "__main__":
-    # Example usage - users would run this exactly
     try:
-        analyzer = SMEeBayAnalyzer("sample_campaigns.csv")
+        # Point to the cleaned dataset inside data/
+        analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
         analyzer.run_full_analysis()
     except FileNotFoundError:
         print("❌ Error: data/sample_campaigns.csv not found")
@@ -253,3 +253,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"❌ Error: {e}")
         print("Check that your CSV file matches the expected format")
+
