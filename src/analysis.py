@@ -243,9 +243,13 @@ class SMEeBayAnalyzer:
 
 if __name__ == "__main__":
     try:
-        analyzer = SMEeBayAnalyzer("data/Promotion_listing_AKF.csv")
+        # Use the cleaned CSV inside data/
+        analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
         analyzer.run_full_analysis()
     except FileNotFoundError:
-        print("❌ Error: data/Promotion_listing_AKF.csv bulunamadı.")
+        print("❌ Error: data/sample_campaigns.csv not found.")
+        print("Make sure 'sample_campaigns.csv' exists in the data/ folder.")
     except Exception as e:
-        print(f"❌ Hata: {e}")
+        print(f"❌ Error: {e}")
+        print("Check that your CSV file matches the expected format and that the path is correct.")
+Then commit and push. Running:
