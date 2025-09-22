@@ -8,6 +8,69 @@ from sklearn.metrics import r2_score, mean_squared_error, roc_auc_score
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 
+# ========== 1) DATA LOADER (ilk bu!) ==========
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "data"
+
+CANDIDATES = [
+    DATA_DIR / "Promotion_Listing_AKF.csv",  # gerçek export (varsa bunu kullan)
+    DATA_DIR / "sample_campaigns.csv",        # yedek küçük örnek
+    DATA_DIR / "sample_synthetic.csv",        # opsiyonel sentetik
+]
+
+def _find_data():
+    for p in CANDIDATES:
+        if p.exists():
+            print(f"[INFO] Using data file: {p.relative_to(ROOT)}")
+            return p
+    raise FileNotFoundError("No dataset found in /data. Put one of: "
+                            + ", ".join(x.name for x in CANDIDATES))
+
+def _normalise_columns(df: pd.DataFrame) -> pd.DataFrame:
+    colmap = {
+        "Anzeigengebühren (ohne MwSt.)": "Ad_Spend_excl_VAT",
+        "Anzeigen-Klicks insgesamt": "Total_Ad_Clicks",
+        "Gesamtumsatz mit Anzeigen": "Total_Revenue_with_Ads",
+        "Anzeigen-Impressions (über Platzierungen bei eBay)": "Impressions",
+        "Rentabilität der Anzeigenkosten (Umsatz/Anzeigengebühren (ohne MwSt.))": "ROAS",
+        "Ad Spend excl VAT": "Ad_Spend_excl_VAT",
+        "Total Ad Clicks": "Total_Ad_Clicks",
+        "Total Revenue with Ads": "Total_Revenue_with_Ads",
+    }
+    df = df.rename(columns={k: v for k, v in colmap.items() if k in df.columns})
+
+    if "CTR" not in df.columns and {"Total_Ad_Clicks","Impressions"}.issubset(df.columns):
+        df["CTR"] = (df["Total_Ad_Clicks"] / df["Impressions"]).replace([np.inf, np.nan], 0).clip(0,1)
+    if "CPC" not in df.columns and {"Ad_Spend_excl_VAT","Total_Ad_Clicks"}.issubset(df.columns):
+        df["CPC"] = (df["Ad_Spend_excl_VAT"] / df["Total_Ad_Clicks"]).replace([np.inf, np.nan], 0)
+    if "ROAS" not in df.columns and {"Total_Revenue_with_Ads","Ad_Spend_excl_VAT"}.issubset(df.columns):
+        df["ROAS"] = (df["Total_Revenue_with_Ads"] / df["Ad_Spend_excl_VAT"]).replace([np.inf, np.nan], 0)
+    if "Has_Revenue" not in df.columns and "Total_Revenue_with_Ads" in df.columns:
+        df["Has_Revenue"] = (df["Total_Revenue_with_Ads"] > 0).astype(int)
+
+    required = ["Ad_Spend_excl_VAT","Total_Revenue_with_Ads","Total_Ad_Clicks",
+                "Impressions","CTR","CPC","ROAS","Has_Revenue"]
+    miss = [c for c in required if c not in df.columns]
+    if miss:
+        raise ValueError(f"Missing required columns after normalisation: {miss}\nHave: {list(df.columns)}")
+    return df
+
+DATA_FILE = _find_data()
+df_raw   = pd.read_csv(DATA_FILE)
+df_clean = _normalise_columns(df_raw)
+
+# ========== 2) (İSTEĞE BAĞLI) VIF — loader’dan SONRA ==========
+d = df_clean[(df_clean['Ad_Spend_excl_VAT'] > 0) & (df_clean['Total_Ad_Clicks'] > 0)].copy()
+X = d[['Ad_Spend_excl_VAT','Total_Ad_Clicks','CTR','CPC']].dropna()
+Xc = add_constant(X, has_constant='add')
+vif = pd.DataFrame({
+    "Variable": Xc.columns,
+    "VIF": [variance_inflation_factor(Xc.values, i) for i in range(Xc.shape[1])]
+})
+print("\nVariance Inflation Factors:\n", vif[vif["Variable"] != "const"])
+
+# ========== 3) MODELLER ==========
+# ... (buradan sonra sınıfın/OLS/logit/quadratic fonksiyonların)
 class SMEeBayAnalyzer:
     def __init__(self, data: pd.DataFrame):
         self.data = data.copy()
