@@ -245,7 +245,7 @@ class SMEeBayAnalyzer:
 if __name__ == "__main__":
     # Example usage - users would run this exactly
     try:
-        analyzer = SMEeBayAnalyzer("data/Promotion_listing_AKF.csv")
+        analyzer = SMEeBayAnalyzer("sample_campaigns.csv")
         analyzer.run_full_analysis()
     except FileNotFoundError:
         print("❌ Error: data/sample_campaigns.csv not found")
