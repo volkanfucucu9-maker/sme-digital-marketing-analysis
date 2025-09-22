@@ -1,4 +1,3 @@
-# src/analysis.py
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
@@ -8,24 +7,18 @@ from sklearn.metrics import r2_score, mean_squared_error, roc_auc_score
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 
-# ========== 1) DATA LOADER (ilk bu!) ==========
-
+# ===== 1) CSV'yi ÖNCE oku (gerçek dosyanı kullan) =====
 df_clean = pd.read_csv("data/Promotion_Listing_AKF.csv")
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "data"
-
-CANDIDATES = [
-    DATA_DIR / "Promotion_Listing_AKF.csv",  
-]
-
-def _find_data():
-    for p in CANDIDATES:
-        if p.exists():
-            print(f"[INFO] Using data file: {p.relative_to(ROOT)}")
-            return p
-    raise FileNotFoundError("No dataset found in /data. Put one of: "
-                            + ", ".join(x.name for x in CANDIDATES))
+# (İsteğe bağlı) VIF — CSV okunduktan ve filtre uygulandıktan sonra
+d = df_clean[(df_clean['Ad_Spend_excl_VAT'] > 0) & (df_clean['Total_Ad_Clicks'] > 0)].copy()
+X = d[['Ad_Spend_excl_VAT','Total_Ad_Clicks','CTR','CPC']].dropna()
+Xc = add_constant(X, has_constant='add')
+vif = pd.DataFrame({
+    "Variable": Xc.columns,
+    "VIF": [variance_inflation_factor(Xc.values, i) for i in range(Xc.shape[1])]
+})
+print("\nVariance Inflation Factors:\n", vif[vif["Variable"] != "const"])
 
 def _normalise_columns(df: pd.DataFrame) -> pd.DataFrame:
     colmap = {
