@@ -1,4 +1,3 @@
-# Complete analysis.py that matches your notebook workflow
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
@@ -91,7 +90,6 @@ class SMEeBayAnalyzer:
             
             df.columns = [german_to_english.get(col, col) for col in df.columns]
         
-        # Numeric cleaning (as in your notebook)
         def clean_numeric(value):
             if pd.isna(value) or value in ["", "--"]:
                 return 0
@@ -101,7 +99,6 @@ class SMEeBayAnalyzer:
             except:
                 return 0
         
-        # List of numeric columns from your notebook
         num_cols = [
             'Ad_Impressions_eBay','Total_Ad_Clicks','Units_Sold_with_Ads_Total',
             'Units_Sold_Organic','Total_Units_Sold','Ad_Conversion_Rate','Ad_Attribution_Rate',
@@ -112,12 +109,10 @@ class SMEeBayAnalyzer:
             'Organic_Impressions','Current_Price','Available_Stock'
         ]
         
-        # Clean numeric columns
         for col in num_cols:
             if col in df.columns:
                 df[col] = df[col].apply(clean_numeric)
         
-        # Calculate derived metrics (as in your notebook)
         df['CTR'] = np.where(df['Ad_Impressions_eBay']>0,
                             df['Total_Ad_Clicks']/df['Ad_Impressions_eBay']*100, 0)
         
@@ -141,13 +136,11 @@ class SMEeBayAnalyzer:
 
     def prepare_analysis_data(self):
         """Filter and prepare data for analysis"""
-        # Filter campaigns with spend and clicks (as in your notebook)
         d = self.data[
             (self.data['Ad_Spend_excl_VAT'] > 0) & 
             (self.data['Total_Ad_Clicks'] > 0)
         ].copy()
         
-        # Log transforms
         d['log_ad_spend'] = np.log(d['Ad_Spend_excl_VAT'])
         d['log_revenue'] = np.log(d['Total_Revenue_with_Ads'] + 1)
         
@@ -217,22 +210,18 @@ class SMEeBayAnalyzer:
         return m
 
     def insights(self):
-        """Business Insights Summary"""
-        print("\n💼 BUSINESS INSIGHTS")
+        print("\n BUSINESS INSIGHTS")
         avg_roi = self.data[self.data['ROAS'] > 0]['ROAS'].mean()
         success_rate = (self.data['Has_Revenue'] == 1).mean() * 100
         avg_cpc = self.data[self.data['CPC'] > 0]['CPC'].mean()
         print(f"ROI: {avg_roi:.2f}€/€ | Success Rate: {success_rate:.1f}% | Avg CPC: {avg_cpc:.3f}€")
 
     def run_full_analysis(self):
-        """Run complete analysis pipeline"""
-        print("🔍 SME DIGITAL MARKETING ANALYSIS")
+        print(" SME DIGITAL MARKETING ANALYSIS")
         print("=" * 50)
         
-        # VIF Check
         self.calculate_vif()
         
-        # All Models
         self.linear_regression()
         self.elasticity()
         self.logistic_regression() 
@@ -243,7 +232,6 @@ class SMEeBayAnalyzer:
 
 if __name__ == "__main__":
     try:
-        # Temizlenmiş dosyanın yolu
         analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
         analyzer.run_full_analysis()
 
