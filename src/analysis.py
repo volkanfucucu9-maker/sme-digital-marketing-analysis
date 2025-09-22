@@ -246,9 +246,4 @@ if __name__ == "__main__":
         # Temizlenmiş dosyanın yolu
         analyzer = SMEeBayAnalyzer("data/sample_campaigns.csv")
         analyzer.run_full_analysis()
-    except FileNotFoundError:
-        print("❌ Error: data/sample_campaigns.csv not found.")
-        print("Make sure 'sample_campaigns.csv' exists in the data/ folder.")
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        print("Check that your CSV file matches the expected format and that the path is correct.")
+
