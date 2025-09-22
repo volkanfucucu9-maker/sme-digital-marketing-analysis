@@ -88,7 +88,7 @@ class SMEeBayAnalyzer:
 
 if __name__ == "__main__":
     # In Colab or locally, this must run BEFORE any VIF/model
-    df_clean = pd.read_csv("data/sample_synthetic.csv")
+    df_clean = pd.read_csv("Promotion_listing_AKF.csv")
     an = SMEeBayAnalyzer(df_clean)
     an.vif()
     an.linear_regression()
