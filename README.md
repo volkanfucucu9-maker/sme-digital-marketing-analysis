@@ -1,86 +1,61 @@
-# SME Digital Media Marketing - Spending - Performance
+# SME Digital Marketing Analysis - eBay Campaign Performance
 
-This repository has both code and data to my MSc Data Science dissertation (CSD) for Gisma University of Applied Sciences. 
+## 📊 Research Overview
+This repository contains the implementation and analysis for my Master's thesis examining the relationship between digital advertising spend and sales performance for SMEs on eBay marketplace.
 
-Thesis title: Economic Analysis of eBay Campaigns: Exploring the Role of Digital Marketing Effectiveness for SMEs 2023 - 2025 (2023 - 2025)
+## 🎯 Key Findings
+- **9:1 ROAS**: Every €1 spent on advertising generates €9 in revenue
+- **93.3% R²**: Ad spend explains 93% of revenue variation
+- **0.94 Elasticity**: Near-unit elastic relationship
 
-## Project overview
+## 📁 Repository Structure
+├── data/              # Sample data and documentation
+├── docs/              # Additional documentation
+├── src/               # Python modules for analysis
+├── README.md          # Project overview
+├── requirements.txt   # Python dependencies
+└── setup.py          # Package setup
+## 🚀 Quick Start
 
-I evaluate:
-- How Ad Spend May Correlate with Revenue
-- Elasticity of response
-- Probability of success (revenues occurring at any level)
-- Reducing returns and best spend
+### Prerequisites
+- Python 3.10+
+- Jupyter Notebook or Google Colab
 
-## Methods
+## Installation
 
-- Multiple Linear Regression
-- Log‑Log Elasticity
-- Logistic Regression
-- linear regression (polynomial regression)
+Running the Analysis
 
-## Data Preparation Notes
+Clone the repository
+Install dependencies
+Open the Jupyter notebook in Google Colab
+Run all cells sequentially
 
-The raw eBay campaign CSV contains German column names.  
-Before running `SMEeBayAnalyzer`, you must:
+📈 Methodology
 
-1. **Rename Columns**
-   - `Anzeigengebühren (ohne MwSt.)` → `Ad_Spend_excl_VAT`  
-   - `Anzeigen-Klicks insgesamt` → `Total_Ad_Clicks`  
-   - `Gesamtumsatz mit Anzeigen` → `Total_Revenue_with_Ads`  
-   - `Rentabilität der Anzeigenkosten (Umsatz/Anzeigengebühren (ohne MwSt.))` → `ROAS`
+Data: 99 eBay campaigns (after cleaning)
+Models: OLS, Log-log elasticity
+Validation: 5-fold cross-validation
+Tests: Shapiro-Wilk, Breusch-Pagan, Durbin-Watson, VIF
 
-2. **Create Derived Columns**
-   ```python
-   # CTR = Clicks / Impressions
-   df["CTR"] = df["Total_Ad_Clicks"] / df["Anzeigen-Impressions (über Platzierungen bei eBay)"]
+Technical Implementation
 
-   # CPC = Spend / Clicks
-   df["CPC"] = df["Ad_Spend_excl_VAT"] / df["Total_Ad_Clicks"].replace(0, np.nan)
+Automated European format data conversion
+Multiple regression specifications
+Comprehensive diagnostic framework
+Reproducible analysis pipeline
 
-   # Has_Revenue = 1 if revenue > 0, else 0
-   df["Has_Revenue"] = (df["Total_Revenue_with_Ads"] > 0).astype(int)
+📝 Thesis Information
 
-Convert columns like Ad_Spend_excl_VAT, Total_Ad_Clicks, Total_Revenue_with_Ads, CTR, CPC, ROAS to floats
+Title: The Effect of Digital Marketing on Online Sales Performance of SMEs
+Author: Volkan Fuçucu
+University: GISMA University of Applied Sciences
+Program: MSc in Data Science, AI & Digital Business
+Supervisor: Professor William Baker Morrison
+Year: 2025
 
-## Data availability
-This project uses proprietary **eBay Ads** campaign exports at campaign/week level. Raw exports **are not redistributed** due to platform terms and commercial sensitivity.
-
-To ensure reproducibility, the repo includes:
-- `data/Promotion_Listing_AKF.csv` — A dataset with the same shema as the real exports
-- `data_dictionary.md` — definitions, units, construction notes
-- `notebooks/analysis.ipynb` — the exact notebook used for figures/tables
-- `src/analyze.py` — script form of the analysis
-
-The synthetic file reproduces all transformations, models (OLS, log–log, logistic, quadratic), and figures.
-
-
-Quick Start
-Clone the repository:
-
-bash
-git clone https://github.com/volkanfucucu9-maker/sme-digital-marketing-analysis.git
-cd sme-digital-marketing-analysis
-Install dependencies:
-
-bash
-pip install -r requirements.txt
-Run the analysis script:
-
-bash
-python src/analysis.py
-Explore the interactive notebooks:
-
-bash
-jupyter lab notebooks/
-
-Citation
-Fuçucu, V. (2025). The Effect of Digital Marketing on Online Sales Performance of SMEs: A Regression Analysis Using E-commerce Retail Data. GISMA University of Applied Sciences. https://github.com/volkanfucucu9-maker/sme-digital-marketing-analysis
+License
+MIT License
 
 Contact
-Volkan Fuçucu
-volkanfucucu9@gmail.com
-GitHub: @volkanfucucu9-maker
-
-
+For questions about this research, please contact via GitHub issues.
 
