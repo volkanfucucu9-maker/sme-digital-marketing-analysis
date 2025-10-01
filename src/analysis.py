@@ -49,7 +49,7 @@ def load_ebay_data():
             continue
 
     if df is None:
-        print("⚠️ File not found in expected locations")
+        print(" File not found in expected locations")
         print("Please upload the file manually:")
         from google.colab import files
         uploaded = files.upload()
@@ -205,7 +205,7 @@ plt.show()
 def clean_data_for_regression(df, remove_zero_revenue=True):
     """
     Clean data according to dissertation requirements
-    Key requirement: Remove zero revenue entries (William's feedback)
+    Key requirement: Remove zero revenue entries
     """
     df_clean = df.copy()
 
@@ -394,7 +394,7 @@ def report_significant_predictors(model):
                 elif var == 'Total_Ad_Clicks':
                     print(f"  → 1 additional click → €{coef:.2f} increase in revenue")
     else:
-        print("\n⚠️ No individual predictors are statistically significant")
+        print("\n No individual predictors are statistically significant")
         print("This may indicate multicollinearity or insufficient sample size")
 
 report_significant_predictors(model)
@@ -453,7 +453,7 @@ def check_regression_assumptions(model, X, y):
         print(f"{assumption:25s}: {'✓ PASS' if passed else '✗ FAIL'}")
 
     if not all_passed:
-        print("\n⚠️ WARNING: Some assumptions are violated")
+        print("\n WARNING: Some assumptions are violated")
         print("Consider data transformations or alternative models")
     else:
         print("\n✓ All assumptions are satisfied")
@@ -536,7 +536,7 @@ def perform_cross_validation(X, y):
     elif cv_coefficient < 0.2:
         print("✓ Model shows acceptable stability")
     else:
-        print("⚠️ Model shows high variability across folds")
+        print(" Model shows high variability across folds")
 
     return cv_scores
 
