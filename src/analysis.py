@@ -349,7 +349,7 @@ def build_regression_model(X_train, y_train, X_test, y_test):
     print(f"\nOverfitting Check:")
     print(f"  Train-Test R² difference: {overfit_pct:.1f}%")
     if overfit_pct > 10:
-        print("  ⚠️ Warning: Potential overfitting detected")
+        print("   Warning: Potential overfitting detected")
     else:
         print("  ✓ Model generalizes well")
 
@@ -402,7 +402,7 @@ report_significant_predictors(model)
 def check_regression_assumptions(model, X, y):
     """
     Comprehensive check of all OLS assumptions
-    MUST be done before reporting results (William's feedback)
+    MUST be done before reporting results 
     """
     print("="*50)
     print("REGRESSION ASSUMPTIONS TESTING")
@@ -465,7 +465,7 @@ assumptions = check_regression_assumptions(model, X_train_const, y_train)
 
 def plot_diagnostic_plots(model, X, y):
     """
-    Create diagnostic plots with proper labels (William's requirement)
+    Create diagnostic plots with proper labels 
     """
     residuals = model.resid
     fitted = model.fittedvalues
